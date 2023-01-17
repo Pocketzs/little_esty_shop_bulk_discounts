@@ -84,4 +84,25 @@ RSpec.describe 'merchants bulk discount index' do
       expect("Friday, April 7, 2023").to appear_before("Monday, May 29, 2023")
     end
   end
+
+  # 3: Merchant Bulk Discount Delete
+
+  # As a merchant
+  # When I visit my bulk discounts index
+  # Then next to each bulk discount I see a link to delete it
+  # When I click this link
+  # Then I am redirected back to the bulk discounts index page
+  # And I no longer see the discount listed
+
+  it 'has a link to delete the bulk discount' do
+    within "#bulk-discount-#{@discount1a.id}" do
+      click_link("Delete Bulk Discount #{@discount1a.id}")
+    end
+
+    expect(current_path).to eq(merchant_bulk_discounts_path(@merchant1))
+
+    expect(page).to_not have_content("Bulk Discount #{@discount1a.id}")
+    expect(page).to_not have_content("#{(@discount1a.percentage_discount*100).to_int}%")
+    expect(page).to_not have_content(@discount1a.quantity_threshold)
+  end
 end
